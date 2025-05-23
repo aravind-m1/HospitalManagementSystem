@@ -1,0 +1,95 @@
+.appointments-container {
+  padding: var(--spacing-lg);
+}
+
+.appointments-container h2 {
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-primary-light);
+}
+
+.calendar-card {
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  background-color: var(--background-light);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* FullCalendar customization */
+.fc {
+  font-family: var(--font-primary);
+}
+
+.fc .fc-toolbar-title {
+  font-size: var(--font-size-xl);
+  color: var(--text-primary-light);
+}
+
+.fc .fc-button-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  transition: all var(--transition-normal);
+}
+
+.fc .fc-button-primary:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.fc .fc-daygrid-day {
+  cursor: pointer;
+  transition: background-color var(--transition-normal);
+}
+
+.fc .fc-daygrid-day:hover {
+  background-color: rgba(37, 99, 235, 0.1);
+}
+
+.fc .fc-event {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  padding: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+}
+
+/* Appointment form dialog */
+.appointment-form {
+  min-width: 400px;
+  padding: var(--spacing-sm) 0;
+}
+
+@media (max-width: 768px) {
+  .appointment-form {
+    min-width: 100%;
+  }
+
+  .fc .fc-toolbar {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Dark mode support */
+[data-theme="dark"] .appointments-container h2 {
+  color: var(--text-primary-dark);
+}
+
+[data-theme="dark"] .calendar-card {
+  background-color: var(--background-dark);
+}
+
+[data-theme="dark"] .fc .fc-toolbar-title {
+  color: var(--text-primary-dark);
+}
+
+[data-theme="dark"] .fc .fc-daygrid-day:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .fc .fc-daygrid-day-number {
+  color: var(--text-primary-dark);
+}
+
+[data-theme="dark"] .fc .fc-col-header-cell {
+  color: var(--text-primary-dark);
+} 
