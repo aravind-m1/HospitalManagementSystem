@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Paper,
@@ -15,6 +15,7 @@ import {
 import { User, Mail, Phone, Home, Edit2, Save, X } from 'lucide-react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
+
 const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -31,10 +32,8 @@ const Profile = () => {
     emergencyContact: '',
   });
   const [editedProfile, setEditedProfile] = useState({});
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-  const fetchProfile = async () => {
+
+  const fetchProfile = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -52,7 +51,12 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedProfile((prev) => ({
@@ -60,14 +64,17 @@ const Profile = () => {
       [name]: value,
     }));
   };
+
   const handleEdit = () => {
     setIsEditing(true);
   };
+
   const handleCancel = () => {
     setEditedProfile(profile);
     setIsEditing(false);
     setError('');
   };
+
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -86,6 +93,7 @@ const Profile = () => {
       setError(error.response?.data?.error || 'Failed to update profile');
     }
   };
+
   if (loading) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -95,6 +103,7 @@ const Profile = () => {
       </Container>
     );
   }
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
@@ -257,4 +266,5 @@ const Profile = () => {
     </Container>
   );
 };
+
 export default Profile; 

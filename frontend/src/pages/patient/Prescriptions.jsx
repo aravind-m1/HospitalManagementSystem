@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -19,15 +19,14 @@ import {
 } from '@mui/material';
 import { FileText, Calendar, User, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+
 const Prescriptions = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [prescriptions, setPrescriptions] = useState([]);
-  useEffect(() => {
-    fetchPrescriptions();
-  }, []);
-  const fetchPrescriptions = async () => {
+
+  const fetchPrescriptions = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -52,7 +51,12 @@ const Prescriptions = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    fetchPrescriptions();
+  }, [fetchPrescriptions]);
+
   if (loading) {
     return (
       <Container maxWidth="lg">
