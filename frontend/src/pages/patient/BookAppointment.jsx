@@ -16,17 +16,17 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useAuth } from '../../hooks/useAuth';
 import axios from 'axios';
+
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   marginTop: theme.spacing(4),
   borderRadius: theme.spacing(2),
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
 }));
+
 const BookAppointment = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [doctors, setDoctors] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -38,36 +38,7 @@ const BookAppointment = () => {
     time: '',
     reason: '',
   });
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-    fetchDoctors();
-  }, [navigate]);
-  useEffect(() => {
-    if (appointmentData.doctorId && appointmentData.date) {
-      fetchAvailableSlots();
-    } else {
-      setAvailableSlots([]);
-    }
-  }, [appointmentData.doctorId, appointmentData.date, fetchAvailableSlots]);
-  const fetchDoctors = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('/api/doctor/all', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setDoctors(response.data);
-    } catch (err) {
-      setError('Failed to fetch doctors. Please try again later.');
-      console.error('Error fetching doctors:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+
   const fetchAvailableSlots = useCallback(async () => {
     try {
       setError('');
@@ -118,6 +89,40 @@ const BookAppointment = () => {
       setAvailableSlots([]);
     }
   }, [appointmentData.doctorId, appointmentData.date, navigate]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    fetchDoctors();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (appointmentData.doctorId && appointmentData.date) {
+      fetchAvailableSlots();
+    } else {
+      setAvailableSlots([]);
+    }
+  }, [appointmentData.doctorId, appointmentData.date, fetchAvailableSlots]);
+
+  const fetchDoctors = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const response = await axios.get('/api/doctor/all', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setDoctors(response.data);
+    } catch (err) {
+      setError('Failed to fetch doctors. Please try again later.');
+      console.error('Error fetching doctors:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const formatTimeSlot = (time) => {
     const [hour, minute] = time.split(':');
     const hourNum = parseInt(hour);
@@ -125,6 +130,7 @@ const BookAppointment = () => {
     const hour12 = hourNum % 12 || 12;
     return `${hour12}:${minute} ${ampm}`;
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAppointmentData(prev => ({
@@ -140,10 +146,10 @@ const BookAppointment = () => {
       }));
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -208,7 +214,9 @@ const BookAppointment = () => {
       setLoading(false);
     }
   };
+
   const today = new Date().toISOString().split('T')[0];
+
   return (
     <Container maxWidth="md">
       <StyledPaper elevation={3}>
@@ -304,4 +312,5 @@ const BookAppointment = () => {
     </Container>
   );
 };
+
 export default BookAppointment; 

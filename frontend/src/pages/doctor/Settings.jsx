@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Paper,
@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { Save } from '@mui/icons-material';
-import { Lock, Shield } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 
