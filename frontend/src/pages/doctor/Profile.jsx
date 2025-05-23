@@ -94,8 +94,9 @@ const Profile = () => {
             startIcon={isEditing ? <SaveIcon /> : <EditIcon />}
             onClick={() => isEditing ? handleSubmit() : setIsEditing(true)}
             color={isEditing ? "primary" : "secondary"}
+            disabled={saving}
           >
-            {isEditing ? "Save Changes" : "Edit Profile"}
+            {isEditing ? (saving ? "Saving..." : "Save Changes") : "Edit Profile"}
           </Button>
         </Box>
         <Grid container spacing={3}>

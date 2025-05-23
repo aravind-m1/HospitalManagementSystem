@@ -71,6 +71,8 @@ const Appointments = () => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [notes, setNotes] = useState('');
   const [status, setStatus] = useState('');
+  const [search, setSearch] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
 
   useEffect(() => {
     fetchAppointments();
@@ -171,6 +173,12 @@ const Appointments = () => {
     }
   };
 
+  const filteredAppointments = appointments.filter(apt => 
+    (apt.patientName?.toLowerCase().includes(search.toLowerCase()) || 
+    apt.patientId?.email?.toLowerCase().includes(search.toLowerCase())) && 
+    (!selectedStatus || apt.status === selectedStatus)
+  );
+
   if (loading) {
     return (
       <Container maxWidth="lg">
@@ -199,7 +207,7 @@ const Appointments = () => {
         </Paper>
       ) : (
         <Grid container spacing={3}>
-          {appointments.map((appointment) => (
+          {filteredAppointments.map((appointment) => (
             <Grid item xs={12} md={6} lg={4} key={appointment._id}>
               <AppointmentCard>
                 <CardContent>

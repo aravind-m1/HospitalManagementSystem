@@ -11,7 +11,6 @@ import {
   Avatar,
   CircularProgress,
   Alert,
-  Chip,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -20,13 +19,9 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
-  User,
-  Phone,
-  Mail,
+  Search,
   Calendar,
-  Activity,
-  FileText,
-  Plus,
+  ClipboardList,
 } from 'lucide-react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
@@ -148,12 +143,12 @@ const Patients = () => {
                     </Box>
                   </Box>
                   <IconText
-                    icon={Mail}
+                    icon={ClipboardList}
                     text={patient.email}
                   />
                   {patient.phone && (
                     <IconText
-                      icon={Phone}
+                      icon={ClipboardList}
                       text={patient.phone}
                     />
                   )}
@@ -166,7 +161,7 @@ const Patients = () => {
                   <Box mt={2}>
                     <Button
                       variant="outlined"
-                      startIcon={<Plus />}
+                      startIcon={<ClipboardList />}
                       onClick={() => {
                         setSelectedPatient(patient);
                         setDialogOpen(true);

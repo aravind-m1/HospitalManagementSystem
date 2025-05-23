@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
       axios.interceptors.request.eject(requestInterceptor);
       axios.interceptors.response.eject(responseInterceptor);
     };
-  }, [navigate]);
+  }, [checkAuth]);
 
   const checkAuth = async () => {
     try {

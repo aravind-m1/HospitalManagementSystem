@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Grid,
@@ -7,79 +7,19 @@ import {
   Typography,
   Box,
   Button,
-  Card,
-  CardContent,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Chip,
-  Divider,
   Alert,
-  LinearProgress,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  MenuItem,
-  IconButton,
   CircularProgress,
 } from '@mui/material';
 import {
-  Today as TodayIcon,
   Schedule as ScheduleIcon,
   CheckCircle as CheckCircleIcon,
   Cancel as CancelIcon,
-  Person as PersonIcon,
   PendingActions as PendingIconMUI,
 } from '@mui/icons-material';
 import axios from 'axios';
 import { format } from 'date-fns';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
 import { API_ENDPOINTS } from '../../config/api';
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
-const StatusIcon = ({ status }) => {
-  let IconComponent;
-  switch (status.toLowerCase()) {
-    case 'completed':
-      IconComponent = CheckCircleIcon;
-      break;
-    case 'cancelled':
-      IconComponent = CancelIcon;
-      break;
-    case 'pending':
-      IconComponent = PendingIconMUI;
-      break;
-    default:
-      IconComponent = ScheduleIcon;
-  }
-  return <IconComponent fontSize="small" />;
-};
-const StatIcon = ({ Icon, color }) => {
-  if (!Icon) return null;
-  return (
-    <Box sx={{ color, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-      <Icon sx={{ fontSize: 24 }} />
-    </Box>
-  );
-};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -184,7 +124,6 @@ const Dashboard = () => {
         </Alert>
       )}
       <Grid container spacing={3}>
-        {}
         <Grid item xs={12} md={3}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 140 }}>
             <Typography variant="h6" gutterBottom>Total Appointments</Typography>
@@ -217,7 +156,6 @@ const Dashboard = () => {
             </Typography>
           </Paper>
         </Grid>
-        {}
         <Grid item xs={12}>
           <Paper sx={{ p: 2 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>

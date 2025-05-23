@@ -1,33 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  Container,
+  Paper,
+  Typography,
   Box,
+  Grid,
   TextField,
   Button,
-  Typography,
-  Link as MuiLink,
-  InputAdornment,
-  IconButton,
-  CircularProgress,
-  Alert,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  Grid,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { 
-  Person, 
-  Lock, 
-  Visibility, 
-  VisibilityOff, 
-  LocalHospital,
-  Email,
-  Badge
-} from '@mui/icons-material';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { API_ENDPOINTS } from '../../config/api';
+
 const AuthContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   width: '100vw',

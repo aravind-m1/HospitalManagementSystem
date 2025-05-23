@@ -107,13 +107,12 @@ const Dashboard = () => {
   };
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [fetchDashboardData]);
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchDashboardData();
-    }, 30000);
+    fetchDashboardData();
+    const interval = setInterval(fetchDashboardData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchDashboardData]);
   useEffect(() => {
     const handleFocus = () => {
       fetchDashboardData();
@@ -121,6 +120,11 @@ const Dashboard = () => {
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, []);
+  useEffect(() => {
+    if (selectedDoctor) {
+      fetchDashboardData();
+    }
+  }, [selectedDoctor, fetchDashboardData]);
   const departmentData = Object.entries(stats.departmentStats || {}).map(([name, value]) => ({
     name,
     value,

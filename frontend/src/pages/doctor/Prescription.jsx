@@ -11,8 +11,6 @@ import {
   Select,
   MenuItem,
   Grid,
-  Card,
-  CardContent,
   Alert,
   Snackbar,
   IconButton,
@@ -52,7 +50,6 @@ const Prescription = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   useEffect(() => {

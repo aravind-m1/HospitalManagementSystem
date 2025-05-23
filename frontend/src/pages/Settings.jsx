@@ -1,1 +1,196 @@
-import React, { useState, useEffect } from 'react';import { useNavigate } from 'react-router-dom';import {  Box,  Container,  Paper,  Typography,  TextField,  Button,  Alert,  Switch,  FormControlLabel,  Divider,  CircularProgress,  IconButton,  InputAdornment,} from '@mui/material';import { styled } from '@mui/material/styles';import { Eye, EyeOff } from 'lucide-react';import { useAuth } from '../hooks/useAuth';import axios from 'axios';const StyledPaper = styled(Paper)(({ theme }) => ({  padding: theme.spacing(4),  marginTop: theme.spacing(4),  borderRadius: theme.spacing(2),  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',}));const Settings = () => {  const navigate = useNavigate();  const { user } = useAuth();  const [error, setError] = useState('');  const [success, setSuccess] = useState('');  const [loading, setLoading] = useState(false);  const [showCurrentPassword, setShowCurrentPassword] = useState(false);  const [showNewPassword, setShowNewPassword] = useState(false);  const [showConfirmPassword, setShowConfirmPassword] = useState(false);  const [notifications, setNotifications] = useState({    email: true,    sms: false,  });  const [passwordData, setPasswordData] = useState({    currentPassword: '',    newPassword: '',    confirmPassword: '',  });  useEffect(() => {    const token = localStorage.getItem('token');    if (!token) {      navigate('/login');      return;    }    const fetchNotificationPreferences = async () => {      try {        const response = await axios.get(`/api/${user.role}/notifications`, {          headers: { Authorization: `Bearer ${token}` }        });        setNotifications(response.data);      } catch (error) {        if (error.response?.status === 401) {          localStorage.removeItem('token');          localStorage.removeItem('role');          navigate('/login');        }      }    };    fetchNotificationPreferences();  }, [user, navigate]);  const handleNotificationChange = (event) => {    setNotifications({      ...notifications,      [event.target.name]: event.target.checked,    });  };  const handlePasswordChange = (e) => {    setPasswordData({      ...passwordData,      [e.target.name]: e.target.value,    });    setError('');  };  const validatePassword = () => {    if (passwordData.newPassword !== passwordData.confirmPassword) {      setError('New passwords do not match');      return false;    }    if (passwordData.newPassword.length < 8) {      setError('New password must be at least 8 characters long');      return false;    }    if (passwordData.newPassword === passwordData.currentPassword) {      setError('New password must be different from current password');      return false;    }    return true;  };  const handleSubmit = async (e) => {    e.preventDefault();    setError('');    setSuccess('');    if (!validatePassword()) {      return;    }    setLoading(true);    try {      const token = localStorage.getItem('token');      if (!token) {        navigate('/login');        return;      }      const response = await axios.put(        `/api/${user.role}/change-password`,        {          currentPassword: passwordData.currentPassword,          newPassword: passwordData.newPassword        },        { headers: { Authorization: `Bearer ${token}` } }      );      setSuccess('Password updated successfully');      setPasswordData({        currentPassword: '',        newPassword: '',        confirmPassword: ''      });    } catch (err) {      setError(err.response?.data?.error || 'Failed to update password');      if (err.response?.status === 401) {        localStorage.removeItem('token');        localStorage.removeItem('role');        navigate('/login');      }    } finally {      setLoading(false);    }  };  const handleSaveNotifications = async () => {    try {      setLoading(true);      setError('');      setSuccess('');      const token = localStorage.getItem('token');      if (!token) {        navigate('/login');        return;      }      const response = await axios.put(        `/api/${user.role}/notifications`,        notifications,        { headers: { Authorization: `Bearer ${token}` } }      );      setSuccess('Notification preferences updated successfully');    } catch (err) {      setError(err.response?.data?.error || 'Failed to update notification preferences');      if (err.response?.status === 401) {        localStorage.removeItem('token');        localStorage.removeItem('role');        navigate('/login');      }    } finally {      setLoading(false);    }  };  return (    <Container maxWidth="md">      <StyledPaper elevation={3}>        <Typography variant="h5" gutterBottom>          Settings        </Typography>        {error && (          <Alert severity="error" sx={{ mb: 2 }}>            {error}          </Alert>        )}        {success && (          <Alert severity="success" sx={{ mb: 2 }}>            {success}          </Alert>        )}        <Box component="section" mb={4}>          <Typography variant="h6" gutterBottom>            Notifications          </Typography>          <FormControlLabel            control={              <Switch                checked={notifications.email}                onChange={handleNotificationChange}                name="email"                color="primary"              />            }            label="Email Notifications"          />          <FormControlLabel            control={              <Switch                checked={notifications.sms}                onChange={handleNotificationChange}                name="sms"                color="primary"              />            }            label="SMS Notifications"          />          <Box mt={2}>            <Button              variant="contained"              color="primary"              onClick={handleSaveNotifications}              disabled={loading}            >              {loading ? <CircularProgress size={24} /> : 'Save Preferences'}            </Button>          </Box>        </Box>        <Divider sx={{ my: 4 }} />        <Box component="form" onSubmit={handleSubmit}>          <Typography variant="h6" gutterBottom>            Change Password          </Typography>          <Box mb={3}>            <TextField              fullWidth              type={showCurrentPassword ? 'text' : 'password'}              label="Current Password"              name="currentPassword"              value={passwordData.currentPassword}              onChange={handlePasswordChange}              margin="normal"              required              InputProps={{                endAdornment: (                  <InputAdornment position="end">                    <IconButton                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}                      edge="end"                    >                      {showCurrentPassword ? <EyeOff size={20} /> : <Eye size={20} />}                    </IconButton>                  </InputAdornment>                ),              }}            />            <TextField              fullWidth              type={showNewPassword ? 'text' : 'password'}              label="New Password"              name="newPassword"              value={passwordData.newPassword}              onChange={handlePasswordChange}              margin="normal"              required              helperText="Password must be at least 8 characters long"              InputProps={{                endAdornment: (                  <InputAdornment position="end">                    <IconButton                      onClick={() => setShowNewPassword(!showNewPassword)}                      edge="end"                    >                      {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}                    </IconButton>                  </InputAdornment>                ),              }}            />            <TextField              fullWidth              type={showConfirmPassword ? 'text' : 'password'}              label="Confirm New Password"              name="confirmPassword"              value={passwordData.confirmPassword}              onChange={handlePasswordChange}              margin="normal"              required              InputProps={{                endAdornment: (                  <InputAdornment position="end">                    <IconButton                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}                      edge="end"                    >                      {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}                    </IconButton>                  </InputAdornment>                ),              }}            />          </Box>          <Button            type="submit"            variant="contained"            color="primary"            disabled={loading}          >            {loading ? <CircularProgress size={24} /> : 'Update Password'}          </Button>        </Box>      </StyledPaper>    </Container>  );};export default Settings; 
+import React, { useState } from 'react';
+import {
+  Container,
+  Paper,
+  Typography,
+  Box,
+  Grid,
+  TextField,
+  Button,
+  Alert,
+  Switch,
+  FormControlLabel,
+  CircularProgress,
+} from '@mui/material';
+import { Save } from '@mui/icons-material';
+import { Lock } from 'lucide-react';
+import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
+
+const Settings = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [settings, setSettings] = useState({
+    emailNotifications: true,
+    smsNotifications: false,
+    darkMode: false,
+  });
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+  const handleSettingsChange = (setting) => {
+    setSettings(prev => ({
+      ...prev,
+      [setting]: !prev[setting]
+    }));
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSaveSettings = async () => {
+    setLoading(true);
+    setError('');
+    setSuccess(false);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(API_ENDPOINTS.SETTINGS, settings, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSuccess(true);
+    } catch (error) {
+      setError(error.response?.data?.error || 'Failed to update settings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setError('New passwords do not match');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    setSuccess(false);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(API_ENDPOINTS.CHANGE_PASSWORD, passwordData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSuccess(true);
+      setPasswordData({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+    } catch (error) {
+      setError(error.response?.data?.error || 'Failed to change password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Container maxWidth="md">
+      <Paper elevation={3}>
+        <Typography variant="h5" gutterBottom>
+          Settings
+        </Typography>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {success}
+          </Alert>
+        )}
+        <Box component="section" mb={4}>
+          <Typography variant="h6" gutterBottom>
+            Notifications
+          </Typography>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={settings.emailNotifications}
+                onChange={() => handleSettingsChange('emailNotifications')}
+                color="primary"
+              />
+            }
+            label="Email Notifications"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={settings.smsNotifications}
+                onChange={() => handleSettingsChange('smsNotifications')}
+                color="primary"
+              />
+            }
+            label="SMS Notifications"
+          />
+          <Box mt={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSaveSettings}
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={24} /> : 'Save Preferences'}
+            </Button>
+          </Box>
+        </Box>
+        <Box component="form" onSubmit={handleChangePassword}>
+          <Typography variant="h6" gutterBottom>
+            Change Password
+          </Typography>
+          <Box mb={3}>
+            <TextField
+              fullWidth
+              type="password"
+              label="Current Password"
+              name="currentPassword"
+              value={passwordData.currentPassword}
+              onChange={handlePasswordChange}
+              margin="normal"
+              required
+            />
+            <TextField
+              fullWidth
+              type="password"
+              label="New Password"
+              name="newPassword"
+              value={passwordData.newPassword}
+              onChange={handlePasswordChange}
+              margin="normal"
+              required
+              helperText="Password must be at least 8 characters long"
+            />
+            <TextField
+              fullWidth
+              type="password"
+              label="Confirm New Password"
+              name="confirmPassword"
+              value={passwordData.confirmPassword}
+              onChange={handlePasswordChange}
+              margin="normal"
+              required
+            />
+          </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} /> : 'Update Password'}
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
+  );
+};
+
+export default Settings; 
