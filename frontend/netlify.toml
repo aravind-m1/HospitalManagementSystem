@@ -12,7 +12,7 @@
   CI = "false"
   NODE_VERSION = "16"
   # You can set a default value here, but it's better to set it in Netlify UI
-  REACT_APP_API_URL = "https://your-backend-url.com"
+  REACT_APP_API_URL = "https://hospitalmanagementsystem-e0wn.onrender.com"
 
 # Add CORS headers for API requests
 [[headers]]
