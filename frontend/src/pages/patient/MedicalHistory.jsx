@@ -27,11 +27,14 @@ import {
   Stethoscope,
 } from 'lucide-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
+
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
   borderRadius: theme.spacing(2),
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
 }));
+
 const MedicalHistory = () => {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -42,9 +45,11 @@ const MedicalHistory = () => {
     conditions: [],
     allergies: [],
   });
+
   useEffect(() => {
     fetchMedicalHistory();
   }, []);
+
   const fetchMedicalHistory = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -53,7 +58,7 @@ const MedicalHistory = () => {
         return;
       }
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('http://localhost:5000/api/patient/medical-history', headers);
+      const response = await axios.get(API_ENDPOINTS.PATIENT.MEDICAL_HISTORY, { headers });
       setMedicalHistory(response.data);
       setError('');
     } catch (error) {
@@ -63,9 +68,11 @@ const MedicalHistory = () => {
       setLoading(false);
     }
   };
+
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
   };
+
   const renderAppointmentHistory = () => (
     <List>
       {medicalHistory.appointments.map((appointment, index) => (
@@ -115,6 +122,7 @@ const MedicalHistory = () => {
       )}
     </List>
   );
+
   const renderPrescriptionHistory = () => (
     <List>
       {medicalHistory.prescriptions.map((prescription, index) => (
@@ -168,6 +176,7 @@ const MedicalHistory = () => {
       )}
     </List>
   );
+
   if (loading) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -177,6 +186,7 @@ const MedicalHistory = () => {
       </Container>
     );
   }
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -206,4 +216,5 @@ const MedicalHistory = () => {
     </Container>
   );
 };
+
 export default MedicalHistory; 

@@ -17,6 +17,8 @@ import {
   Edit as EditIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
+
 const Profile = () => {
   const [profile, setProfile] = useState({
     name: '',
@@ -39,7 +41,7 @@ const Profile = () => {
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/doctor/profile', {
+      const response = await axios.get(API_ENDPOINTS.DOCTOR.PROFILE, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProfile(response.data);
@@ -64,7 +66,7 @@ const Profile = () => {
     setError('');
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/doctor/profile', profile, {
+      await axios.put(API_ENDPOINTS.DOCTOR.PROFILE, profile, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccess(true);

@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { User, Mail, Phone, Home, Edit2, Save, X } from 'lucide-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
 const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -40,7 +41,7 @@ const Profile = () => {
         setError('Please log in to view your profile');
         return;
       }
-      const response = await axios.get('http://localhost:5000/api/patient/profile', {
+      const response = await axios.get(API_ENDPOINTS.PATIENT.PROFILE, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProfile(response.data);
@@ -71,7 +72,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        'http://localhost:5000/api/patient/profile',
+        API_ENDPOINTS.PATIENT.PROFILE,
         editedProfile,
         { headers: { Authorization: `Bearer ${token}` } }
       );

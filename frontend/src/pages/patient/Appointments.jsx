@@ -26,6 +26,8 @@ import {
   XCircle,
 } from 'lucide-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
+
 const AppointmentCard = styled(Card)(({ theme }) => ({
   borderRadius: theme.spacing(2),
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
@@ -34,12 +36,14 @@ const AppointmentCard = styled(Card)(({ theme }) => ({
     transform: 'translateY(-4px)',
   },
 }));
+
 const IconText = ({ icon: Icon, text }) => (
   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
     <Icon size={20} />
     <Typography variant="body2">{text}</Typography>
   </Box>
 );
+
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,9 +51,11 @@ const Appointments = () => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
+
   useEffect(() => {
     fetchAppointments();
   }, []);
+
   const fetchAppointments = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -58,7 +64,7 @@ const Appointments = () => {
         return;
       }
       console.log('Fetching patient appointments with token:', token.substring(0, 10) + '...');
-      const response = await axios.get('http://localhost:5000/api/patient/appointments', {
+      const response = await axios.get(API_ENDPOINTS.PATIENT.APPOINTMENTS, {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log('Fetched patient appointments response:', response.data);
@@ -77,15 +83,17 @@ const Appointments = () => {
       setLoading(false);
     }
   };
+
   const handleCancelClick = (appointment) => {
     setSelectedAppointment(appointment);
     setCancelDialogOpen(true);
   };
+
   const handleCancelAppointment = async () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:5000/api/patient/appointments/${selectedAppointment._id}/cancel`,
+        `${API_ENDPOINTS.PATIENT.APPOINTMENTS}/${selectedAppointment._id}/cancel`,
         { reason: cancelReason },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -102,6 +110,7 @@ const Appointments = () => {
       setError(error.response?.data?.error || 'Failed to cancel appointment');
     }
   };
+
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case 'completed':
@@ -114,6 +123,7 @@ const Appointments = () => {
         return '#9E9E9E';
     }
   };
+
   const getStatusIcon = (status) => {
     switch (status.toLowerCase()) {
       case 'completed':
@@ -126,6 +136,7 @@ const Appointments = () => {
         return AlertCircle;
     }
   };
+
   if (loading) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -135,6 +146,7 @@ const Appointments = () => {
       </Container>
     );
   }
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -242,4 +254,5 @@ const Appointments = () => {
     </Container>
   );
 };
+
 export default Appointments; 

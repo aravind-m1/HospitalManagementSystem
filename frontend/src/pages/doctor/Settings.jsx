@@ -15,6 +15,8 @@ import {
 import { Save } from '@mui/icons-material';
 import { Bell } from 'lucide-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
+
 const Settings = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -55,7 +57,7 @@ const Settings = () => {
     }
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/doctor/change-password', {
+      await axios.put(API_ENDPOINTS.DOCTOR.CHANGE_PASSWORD, {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       }, {
@@ -79,7 +81,7 @@ const Settings = () => {
     setSuccess('');
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/doctor/notifications', {
+      await axios.put(API_ENDPOINTS.DOCTOR.NOTIFICATIONS, {
         notificationSettings: notifications
       }, {
         headers: { Authorization: `Bearer ${token}` }

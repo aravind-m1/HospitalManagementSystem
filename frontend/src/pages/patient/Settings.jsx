@@ -14,6 +14,8 @@ import {
 } from '@mui/material';
 import { Lock, Bell, Shield, Save } from 'lucide-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
+
 const Settings = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -43,7 +45,7 @@ const Settings = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        'http://localhost:5000/api/patient/change-password',
+        API_ENDPOINTS.PATIENT.CHANGE_PASSWORD,
         {
           currentPassword: passwordData.currentPassword,
           newPassword: passwordData.newPassword,
@@ -70,7 +72,7 @@ const Settings = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        'http://localhost:5000/api/patient/notifications',
+        API_ENDPOINTS.PATIENT.NOTIFICATIONS,
         { [name]: checked },
         { headers: { Authorization: `Bearer ${token}` } }
       );

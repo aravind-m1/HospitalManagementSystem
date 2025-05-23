@@ -30,6 +30,8 @@ import {
   Settings as SettingsIcon,
 } from 'lucide-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
+
 const PatientHome = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -53,9 +55,9 @@ const PatientHome = () => {
       }
       const headers = { Authorization: `Bearer ${token}` };
       const [profileRes, appointmentsRes, prescriptionsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/patient/profile', { headers }),
-        axios.get('http://localhost:5000/api/patient/appointments', { headers }),
-        axios.get('http://localhost:5000/api/patient/prescriptions', { headers })
+        axios.get(API_ENDPOINTS.PATIENT.PROFILE, { headers }),
+        axios.get(API_ENDPOINTS.PATIENT.APPOINTMENTS, { headers }),
+        axios.get(API_ENDPOINTS.PATIENT.PRESCRIPTIONS, { headers })
       ]);
       setPatientInfo(profileRes.data);
       const sortedAppointments = appointmentsRes.data
