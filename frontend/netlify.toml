@@ -9,4 +9,12 @@
   status = 200
 
 [build.environment]
-  CI = "false" 
+  CI = "false"
+  # You can set a default value here, but it's better to set it in Netlify UI
+  REACT_APP_API_URL = "https://your-backend-url.com"
+
+# Add CORS headers for API requests
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*" 

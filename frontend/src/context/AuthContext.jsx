@@ -9,7 +9,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+  if (!axios.defaults.baseURL) {
+    console.warn('API URL not configured! Please set REACT_APP_API_URL environment variable.');
+    axios.defaults.baseURL = 'http://localhost:5000'; // Fallback for development
+  }
 
   const checkAuth = useCallback(async () => {
     try {
