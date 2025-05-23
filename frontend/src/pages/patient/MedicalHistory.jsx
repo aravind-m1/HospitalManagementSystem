@@ -4,9 +4,7 @@ import {
   Paper,
   Typography,
   Box,
-  Grid,
   Card,
-  CardContent,
   Divider,
   List,
   ListItem,
@@ -18,22 +16,14 @@ import {
   Tab,
   Tabs,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import {
   Calendar,
   FileText,
-  Activity,
   Pill,
   Stethoscope,
 } from 'lucide-react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
-
-const StyledCard = styled(Card)(({ theme }) => ({
-  height: '100%',
-  borderRadius: theme.spacing(2),
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-}));
 
 const MedicalHistory = () => {
   const [value, setValue] = useState(0);

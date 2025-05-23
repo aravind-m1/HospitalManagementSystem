@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -43,10 +43,8 @@ const PatientHome = () => {
   });
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
   const [recentPrescriptions, setRecentPrescriptions] = useState([]);
-  useEffect(() => {
-    fetchData();
-  }, []);
-  const fetchData = async () => {
+
+  const fetchData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -76,7 +74,12 @@ const PatientHome = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   const quickActions = [
     {
       title: 'Book Appointment',
