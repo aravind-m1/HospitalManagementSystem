@@ -15,9 +15,12 @@ app.use(helmet());
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://aquamarine-duckanoo-94f4b6.netlify.app'
+    'https://aquamarine-duckanoo-94f4b6.netlify.app',
+    'https://aravind-hospitalmanagementsystem.netlify.app'
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Rate limiting

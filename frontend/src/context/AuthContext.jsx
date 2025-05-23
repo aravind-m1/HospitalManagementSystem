@@ -10,6 +10,9 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+  axios.defaults.withCredentials = true;
+  axios.defaults.headers.common['Content-Type'] = 'application/json';
+  
   if (!axios.defaults.baseURL) {
     console.warn('API URL not configured! Please set REACT_APP_API_URL environment variable.');
     axios.defaults.baseURL = 'http://localhost:5000'; // Fallback for development
