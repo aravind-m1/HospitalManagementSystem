@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  Container,
-  Paper,
-  Typography,
   Box,
-  Grid,
+  Typography,
   TextField,
   Button,
   FormControl,
@@ -17,20 +14,11 @@ import {
   InputAdornment,
   IconButton,
   Link as MuiLink,
-  Chip,
+  Grid,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import {
-  Person,
-  Lock,
-  Email,
-  Badge,
-  LocalHospital,
-  Visibility,
-  VisibilityOff,
-} from '@mui/icons-material';
+import { LocalHospital, Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from 'axios';
-import { API_ENDPOINTS } from '../../config/api';
 
 const AuthContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -59,6 +47,7 @@ const AuthContainer = styled(Box)(({ theme }) => ({
     zIndex: 1,
   },
 }));
+
 const GlassBox = styled(Box)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.95)',
   backdropFilter: 'blur(10px)',
@@ -76,96 +65,7 @@ const GlassBox = styled(Box)(({ theme }) => ({
     boxShadow: '0 12px 48px rgba(0, 136, 255, 0.2)',
   },
 }));
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  '& .MuiInputBase-root': {
-    color: '#1a1a1a',
-    background: '#ffffff',
-    borderRadius: '12px',
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      background: '#ffffff',
-      boxShadow: '0 4px 12px rgba(0, 136, 255, 0.1)',
-    },
-    '&.Mui-focused': {
-      background: '#ffffff',
-      boxShadow: '0 4px 12px rgba(0, 136, 255, 0.1)',
-    },
-  },
-  '& .MuiInputLabel-root': {
-    color: '#666666',
-    '&.Mui-focused': {
-      color: '#0088ff',
-    },
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#e0e0e0',
-    transition: 'border-color 0.3s ease',
-  },
-  '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#0088ff',
-  },
-  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#0088ff',
-  },
-  '& .MuiInputAdornment-root .MuiSvgIcon-root': {
-    color: '#0088ff',
-  },
-}));
-const StyledSelect = styled(FormControl)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  '& .MuiOutlinedInput-root': {
-    color: '#1a1a1a',
-    background: '#ffffff',
-    borderRadius: '12px',
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      background: '#ffffff',
-      boxShadow: '0 4px 12px rgba(0, 136, 255, 0.1)',
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#0088ff',
-      },
-    },
-    '&.Mui-focused': {
-      background: '#ffffff',
-      boxShadow: '0 4px 12px rgba(0, 136, 255, 0.1)',
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#0088ff',
-      },
-    },
-  },
-  '& .MuiInputLabel-root': {
-    color: '#666666',
-    '&.Mui-focused': {
-      color: '#0088ff',
-    },
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#e0e0e0',
-    transition: 'border-color 0.3s ease',
-  },
-}));
-const GlowButton = styled(Button)(({ theme }) => ({
-  width: '100%',
-  padding: '12px',
-  marginTop: theme.spacing(2),
-  background: 'linear-gradient(45deg, #0088ff, #00ff88)',
-  color: '#fff',
-  borderRadius: '12px',
-  fontWeight: 'bold',
-  textTransform: 'none',
-  fontSize: '1.1rem',
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    background: 'linear-gradient(45deg, #0066cc, #00cc66)',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 8px 32px rgba(0, 136, 255, 0.2)',
-  },
-  '&.Mui-disabled': {
-    background: 'linear-gradient(45deg, #0088ff80, #00ff8880)',
-    color: 'rgba(255, 255, 255, 0.8)',
-  },
-}));
+
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

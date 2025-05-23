@@ -59,7 +59,7 @@ const Dashboard = () => {
     pending: [],
     cancelled: [],
   });
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -115,7 +115,7 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
   useEffect(() => {
     fetchDashboardData();
   }, [fetchDashboardData]);
@@ -130,7 +130,7 @@ const Dashboard = () => {
     };
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
-  }, []);
+  }, [fetchDashboardData]);
   useEffect(() => {
     if (selectedDoctor) {
       fetchDashboardData();

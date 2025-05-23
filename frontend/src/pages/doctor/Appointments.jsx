@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -21,6 +22,8 @@ import {
   MenuItem,
   CircularProgress,
   Alert,
+  IconButton,
+  InputAdornment,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { 
@@ -29,7 +32,11 @@ import {
   Person,
   CheckCircle,
   Cancel,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Search as SearchIcon,
 } from '@mui/icons-material';
+import { isSameDay } from 'date-fns';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 
@@ -73,6 +80,7 @@ const Appointments = () => {
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     fetchAppointments();
@@ -173,11 +181,19 @@ const Appointments = () => {
     }
   };
 
-  const filteredAppointments = appointments.filter(apt => 
-    (apt.patientName?.toLowerCase().includes(search.toLowerCase()) || 
-    apt.patientId?.email?.toLowerCase().includes(search.toLowerCase())) && 
-    (!selectedStatus || apt.status === selectedStatus)
-  );
+  const filteredAppointments = appointments.filter(apt => {
+    const aptDate = new Date(apt.date);
+    const isDateMatch = selectedDate ? isSameDay(aptDate, selectedDate) : true;
+    const isStatusMatch = selectedStatus ? apt.status === selectedStatus : true;
+    const searchLower = search.toLowerCase();
+    const patientName = (apt.patientId && (apt.patientId.firstName || apt.patientId.lastName)) ? 
+      `${apt.patientId.firstName || ''} ${apt.patientId.lastName || ''}`.toLowerCase() : 
+      '';
+    const isSearchMatch = !search || 
+      patientName.includes(searchLower) || 
+      (apt.reason && apt.reason.toLowerCase().includes(searchLower));
+    return isDateMatch && isStatusMatch && isSearchMatch;
+  });
 
   if (loading) {
     return (

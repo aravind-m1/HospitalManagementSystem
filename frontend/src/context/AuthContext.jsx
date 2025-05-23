@@ -11,80 +11,32 @@ export const AuthProvider = ({ children }) => {
 
   axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-  useEffect(() => {
-    const requestInterceptor = axios.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => {
-        console.error('Request interceptor error:', error);
-        return Promise.reject(error);
-      }
-    );
-    const responseInterceptor = axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        console.error('Response error:', error.response || error);
-        if (error.response?.status === 401) {
-          localStorage.removeItem('token');
-          localStorage.removeItem('role');
-          localStorage.removeItem('userId');
-          delete axios.defaults.headers.common['Authorization'];
-          setUser(null);
-          const currentPath = window.location.pathname.toLowerCase();
-          if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
-            navigate('/');
-          }
-        }
-        return Promise.reject(error);
-      }
-    );
-    checkAuth();
-    return () => {
-      axios.interceptors.request.eject(requestInterceptor);
-      axios.interceptors.response.eject(responseInterceptor);
-    };
-  }, [checkAuth]);
-
   const checkAuth = async () => {
     try {
       const token = localStorage.getItem('token');
-      const role = localStorage.getItem('role');
-      const userId = localStorage.getItem('userId');
-      console.log('Checking auth with:', { token: !!token, role, userId });
-      if (!token || !role || !userId) {
-        console.log('Missing auth data:', { token: !!token, role, userId });
-        throw new Error('No authentication token, role, or user ID found');
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return;
       }
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      console.log('Verifying auth with role:', role);
-      const response = await axios.get(`/api/${role}/profile`);
-      console.log('Profile response:', response.data);
-      setUser({
-        ...response.data,
-        role: role,
-        id: userId
+      const response = await axios.get('/api/auth/verify', {
+        headers: { Authorization: `Bearer ${token}` }
       });
+      setUser(response.data);
     } catch (error) {
-      console.error('Auth check failed:', error);
-      console.error('Error response:', error.response?.data);
+      console.error('Auth verification error:', error);
       localStorage.removeItem('token');
       localStorage.removeItem('role');
-      localStorage.removeItem('userId');
-      delete axios.defaults.headers.common['Authorization'];
       setUser(null);
-      const currentPath = window.location.pathname.toLowerCase();
-      if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
-        navigate('/');
-      }
+      navigate('/login');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    checkAuth();
+  }, [navigate]);
 
   const login = async (credentials) => {
     try {
@@ -180,18 +132,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const value = {
+    user,
+    setUser,
+    loading,
+    checkAuth,
+    login,
+    register,
+    logout,
+    updateProfile
+  };
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        login,
-        register,
-        logout,
-        updateProfile,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {!loading && children}
     </AuthContext.Provider>
   );
-}; 
+};
+
+export default AuthContext; 
