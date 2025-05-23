@@ -6,12 +6,8 @@ import {
   Paper,
   Typography,
   Box,
-  Button,
   Card,
   CardContent,
-  CardActions,
-  Avatar,
-  Divider,
   List,
   ListItem,
   ListItemIcon,
@@ -26,7 +22,6 @@ import {
   User,
   Clock,
   Activity,
-  Bell,
   Settings as SettingsIcon,
 } from 'lucide-react';
 import axios from 'axios';
