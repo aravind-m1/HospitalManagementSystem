@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { Save } from '@mui/icons-material';
-import { Bell } from 'lucide-react';
+import { Lock, Shield } from 'lucide-react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 
@@ -171,7 +171,7 @@ const Settings = () => {
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 3 }}>
             <Box display="flex" alignItems="center" mb={3}>
-              <Bell size={24} style={{ marginRight: '8px' }} />
+              <Lock size={24} style={{ marginRight: '8px' }} />
               <Typography variant="h6">Notification Preferences</Typography>
             </Box>
             <FormControlLabel

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -93,12 +93,7 @@ const Dashboard = () => {
       cancelled: 0
     }
   });
-  useEffect(() => {
-    fetchDashboardData();
-    const interval = setInterval(fetchDashboardData, 30000); 
-    return () => clearInterval(interval);
-  }, []);
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -136,7 +131,12 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
+  useEffect(() => {
+    fetchDashboardData();
+    const interval = setInterval(fetchDashboardData, 30000); 
+    return () => clearInterval(interval);
+  }, [fetchDashboardData]);
   const getStatusChipColor = (status) => {
     switch (status.toLowerCase()) {
       case 'confirmed': return 'success';

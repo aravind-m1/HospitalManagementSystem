@@ -10,9 +10,8 @@ import {
   Avatar,
   Alert,
   CircularProgress,
-  Divider,
 } from '@mui/material';
-import { User, Mail, Phone, Home, Edit2, Save, X } from 'lucide-react';
+import { Edit2, Save, X } from 'lucide-react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 
