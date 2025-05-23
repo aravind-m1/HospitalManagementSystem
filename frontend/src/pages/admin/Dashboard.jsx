@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -8,9 +8,11 @@ import {
   Box,
   Alert,
   LinearProgress,
+  CircularProgress,
 } from '@mui/material';
 import {
   Users,
+  UserCheck,
   Calendar,
   Activity,
   ClipboardList,
@@ -29,9 +31,20 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { API_ENDPOINTS } from '../../config/api';
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [dashboardData, setDashboardData] = useState({
+    totalPatients: 0,
+    totalDoctors: 0,
+    totalAppointments: 0,
+    recentAppointments: [],
+    doctorPerformance: [],
+  });
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [stats, setStats] = useState({
     totalDoctors: 0,
     totalPatients: 0,
@@ -46,8 +59,6 @@ const Dashboard = () => {
     pending: [],
     cancelled: [],
   });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -155,62 +166,88 @@ const Dashboard = () => {
           Admin Dashboard
         </Typography>
       </Box>
-      {}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 140 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Users color="#3498db" size={24} />
-              <Typography variant="h6" component="div" sx={{ ml: 1 }}>
-                Total Doctors
-              </Typography>
-            </Box>
-            <Typography variant="h4" component="div">
+        <Grid item xs={12} md={3}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              bgcolor: 'primary.light',
+              color: 'white',
+            }}
+          >
+            <Users size={40} />
+            <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+              Total Patients
+            </Typography>
+            <Typography variant="h4" component="p">
+              {stats.totalPatients}
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              bgcolor: 'success.light',
+              color: 'white',
+            }}
+          >
+            <UserCheck size={40} />
+            <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+              Total Doctors
+            </Typography>
+            <Typography variant="h4" component="p">
               {stats.totalDoctors}
             </Typography>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 140 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Calendar color="#2ecc71" size={24} />
-              <Typography variant="h6" component="div" sx={{ ml: 1 }}>
-                Today's Appointments
-              </Typography>
-            </Box>
-            <Typography variant="h4" component="div">
-              {stats.appointmentsToday}
+        <Grid item xs={12} md={3}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              bgcolor: 'warning.light',
+              color: 'white',
+            }}
+          >
+            <Calendar size={40} />
+            <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+              Total Appointments
+            </Typography>
+            <Typography variant="h4" component="p">
+              {stats.totalAppointments}
             </Typography>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 140 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Activity color="#e74c3c" size={24} />
-              <Typography variant="h6" component="div" sx={{ ml: 1 }}>
-                Completed
-              </Typography>
-            </Box>
-            <Typography variant="h4" component="div">
-              {stats.completedAppointments}
+        <Grid item xs={12} md={3}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              bgcolor: 'info.light',
+              color: 'white',
+            }}
+          >
+            <Activity size={40} />
+            <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+              Active Patients
             </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 140 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <ClipboardList color="#f39c12" size={24} />
-              <Typography variant="h6" component="div" sx={{ ml: 1 }}>
-                Pending
-              </Typography>
-            </Box>
-            <Typography variant="h4" component="div">
-              {stats.pendingAppointments}
+            <Typography variant="h4" component="p">
+              {stats.totalPatients}
             </Typography>
           </Paper>
         </Grid>
       </Grid>
-      {}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 2 }}>
@@ -260,7 +297,6 @@ const Dashboard = () => {
           </Paper>
         </Grid>
       </Grid>
-      {}
       <Paper sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
           Recent Appointments

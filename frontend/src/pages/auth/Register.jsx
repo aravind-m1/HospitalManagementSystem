@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -14,8 +14,21 @@ import {
   MenuItem,
   Alert,
   CircularProgress,
+  InputAdornment,
+  IconButton,
+  Link as MuiLink,
+  Chip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import {
+  Person,
+  Lock,
+  Email,
+  Badge,
+  LocalHospital,
+  Visibility,
+  VisibilityOff,
+} from '@mui/icons-material';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 

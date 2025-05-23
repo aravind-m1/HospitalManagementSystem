@@ -14,11 +14,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  FormControl,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
 import { Person, Lock, Visibility, VisibilityOff, LocalHospital } from '@mui/icons-material';
 import axios from 'axios';
+
 const AuthContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   width: '100vw',
@@ -46,6 +47,7 @@ const AuthContainer = styled(Box)(({ theme }) => ({
     zIndex: 1,
   },
 }));
+
 const GlassBox = styled(Box)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.95)',
   backdropFilter: 'blur(10px)',
@@ -63,6 +65,7 @@ const GlassBox = styled(Box)(({ theme }) => ({
     boxShadow: '0 12px 48px rgba(0, 136, 255, 0.2)',
   },
 }));
+
 const StyledTextField = styled(TextField)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   '& .MuiInputBase-root': {
@@ -99,6 +102,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     color: '#0088ff',
   },
 }));
+
 const StyledSelect = styled(FormControl)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   '& .MuiOutlinedInput-root': {
@@ -132,6 +136,7 @@ const StyledSelect = styled(FormControl)(({ theme }) => ({
     transition: 'border-color 0.3s ease',
   },
 }));
+
 const GlowButton = styled(Button)(({ theme }) => ({
   width: '100%',
   padding: '12px',
@@ -153,6 +158,7 @@ const GlowButton = styled(Button)(({ theme }) => ({
     color: 'rgba(255, 255, 255, 0.8)',
   },
 }));
+
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -329,4 +335,5 @@ const Login = () => {
     </AuthContainer>
   );
 };
+
 export default Login; 

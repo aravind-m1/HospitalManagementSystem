@@ -24,14 +24,29 @@ import {
   FormControl,
   InputLabel,
   Select,
+  InputAdornment,
+  Card,
+  CardContent,
+  Avatar,
+  Tooltip,
+  Collapse,
+  Tabs,
+  Tab,
+  Pagination,
+  Chip,
 } from '@mui/material';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Search as SearchIcon,
+  Mail as MailIcon,
+  Phone as PhoneIcon,
+  MedicalServices,
+  KeyboardArrowUp,
+  KeyboardArrowDown,
 } from '@mui/icons-material';
 import axios from 'axios';
-import { API_ENDPOINTS } from '../../../config/api';
+import { API_ENDPOINTS } from '../../config/api';
 
 const PatientsList = () => {
   const [patients, setPatients] = useState([]);
