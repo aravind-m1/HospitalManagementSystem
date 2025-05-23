@@ -186,12 +186,12 @@ const Appointments = () => {
     const isDateMatch = selectedDate ? isSameDay(aptDate, selectedDate) : true;
     const isStatusMatch = selectedStatus ? apt.status === selectedStatus : true;
     const searchLower = search.toLowerCase();
-    const patientName = (apt.patientId && (apt.patientId.firstName || apt.patientId.lastName)) ? 
+    const patientName = ((apt.patientId && (apt.patientId.firstName || apt.patientId.lastName)) ? 
       `${apt.patientId.firstName || ''} ${apt.patientId.lastName || ''}`.toLowerCase() : 
-      '';
-    const isSearchMatch = !search || 
-      patientName.includes(searchLower) || 
-      (apt.reason && apt.reason.toLowerCase().includes(searchLower));
+      '');
+    const isSearchMatch = (!search || 
+      (patientName.includes(searchLower) || 
+      (apt.reason && apt.reason.toLowerCase().includes(searchLower))));
     return isDateMatch && isStatusMatch && isSearchMatch;
   });
 

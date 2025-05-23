@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -32,11 +32,11 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
 
   useEffect(() => {
     checkAuth();
-  }, [navigate]);
+  }, [checkAuth]);
 
   const login = async (credentials) => {
     try {

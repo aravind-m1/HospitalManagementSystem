@@ -21,11 +21,6 @@ import { styled } from '@mui/material/styles';
 import {
   ClipboardList,
 } from 'lucide-react';
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Search as SearchIcon,
-} from '@mui/icons-material';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 

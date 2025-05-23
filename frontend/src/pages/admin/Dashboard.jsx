@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Grid,
@@ -8,14 +8,12 @@ import {
   Box,
   Alert,
   LinearProgress,
-  CircularProgress,
 } from '@mui/material';
 import {
   Users,
   UserCheck,
   Calendar,
   Activity,
-  ClipboardList,
 } from 'lucide-react';
 import axios from 'axios';
 import {
@@ -31,20 +29,13 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { API_ENDPOINTS } from '../../config/api';
+
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [dashboardData, setDashboardData] = useState({
-    totalPatients: 0,
-    totalDoctors: 0,
-    totalAppointments: 0,
-    recentAppointments: [],
-    doctorPerformance: [],
-  });
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [stats, setStats] = useState({
     totalDoctors: 0,
     totalPatients: 0,
@@ -59,6 +50,7 @@ const Dashboard = () => {
     pending: [],
     cancelled: [],
   });
+
   const fetchDashboardData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
@@ -116,14 +108,17 @@ const Dashboard = () => {
       setLoading(false);
     }
   }, [navigate]);
+
   useEffect(() => {
     fetchDashboardData();
   }, [fetchDashboardData]);
+
   useEffect(() => {
     fetchDashboardData();
     const interval = setInterval(fetchDashboardData, 30000);
     return () => clearInterval(interval);
   }, [fetchDashboardData]);
+
   useEffect(() => {
     const handleFocus = () => {
       fetchDashboardData();
@@ -131,11 +126,7 @@ const Dashboard = () => {
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, [fetchDashboardData]);
-  useEffect(() => {
-    if (selectedDoctor) {
-      fetchDashboardData();
-    }
-  }, [selectedDoctor, fetchDashboardData]);
+
   const departmentData = Object.entries(stats.departmentStats || {}).map(([name, value]) => ({
     name,
     value,
@@ -145,6 +136,7 @@ const Dashboard = () => {
     { name: 'Pending', value: stats.pendingAppointments },
     { name: 'Total Today', value: stats.appointmentsToday },
   ];
+
   if (loading) {
     return (
       <Container maxWidth="lg">
@@ -154,6 +146,7 @@ const Dashboard = () => {
       </Container>
     );
   }
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       {error && (
@@ -338,4 +331,5 @@ const Dashboard = () => {
     </Container>
   );
 };
+
 export default Dashboard; 
